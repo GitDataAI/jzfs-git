@@ -12,7 +12,8 @@ RUN pnpm build
 
 FROM ubuntu:22.04
 COPY --from=backend-builder /app/target/release/jzfs /explore
-RUN chmod +x /usr/local/bin/jzfs
+RUN chmod +x /explore/jzfs
 COPY --from=frontend-builder /app/views/dist /explore/html
 EXPOSE 80
-CMD ["sh", "-c", "/usr/local/bin/jzfs & nginx -g 'daemon off;'"]
+ENV PORT=80
+CMD ["sh", "-c", "/explore/jzfs"]
