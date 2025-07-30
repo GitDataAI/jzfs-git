@@ -43,17 +43,6 @@ jobs:
             echo "commit version"
             echo "::set-output name=version::${{ github.sha }}"
           fi
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-
-      - name: Build project
-        run: cargo build --release
-
-      - name: List files in workspace
-        run: ls -lha
 
       - name: Docker Login
         uses: docker/login-action@v3
