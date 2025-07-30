@@ -62,7 +62,7 @@ export default function AppRoutes() {
                     element: <RepoCommit/>
                 },
                 {
-                    path: 'tree/:path*',
+                    path: 'tree/*',
                     element: <RepoFiles/>
                 }
             ]

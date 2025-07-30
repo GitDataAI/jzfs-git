@@ -46,7 +46,7 @@ interface FileApiResponse {
 }
 
 export const RepoFiles = () => {
-    const { owner, repo, path } = useParams<{ owner: string; repo: string; path?: string }>();
+    const { owner, repo, '*': path } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -112,6 +112,18 @@ export const RepoFiles = () => {
             {files.length ? (
                 <div className="h-[calc(100vh-250px)] overflow-auto">
                     <div>
+                        {
+                            path != "" && path && (
+                                <div>
+                                    <div className="flex items-center" onClick={() => {
+                                        navigate(`/${owner}/${repo}/tree/${path.split('/').slice(0, -1).join('/')}`);
+                                    }}>
+                                        <GitBranch size={18} className="mr-2 text-blue-500" />
+                                        <div>...</div>
+                                    </div>
+                                </div>
+                            )
+                        }
                         {files.map(([file, idx], index) => (
                             <div 
                                 key={index}
@@ -119,7 +131,7 @@ export const RepoFiles = () => {
                                 onClick={() => {
                                     if (file.rtype === 'tree') {
                                         const newPath = path ? `${path}/${file.name}` : file.name;
-                                        navigate(`/repo/${owner}/${repo}/tree/${newPath}`);
+                                        navigate(`/${owner}/${repo}/tree/${newPath}`);
                                     }
                                 }}
                             >

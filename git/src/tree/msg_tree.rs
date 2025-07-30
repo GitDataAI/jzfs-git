@@ -124,17 +124,33 @@ impl AppGit {
             for delta in diff.deltas() {
                 let file = delta.new_file();
                 if let Some(path) = file.path() {
+                    if let Some(Some(parent_dir)) = path.parent().map(|x|x.to_str().map(|x|x.to_string())) {
+                        if !has.contains(&parent_dir.to_string()) {
+                            if let Some(item) = state_tree.iter().find(|x| x.to_path().starts_with(&parent_dir)) {
+                                if item.rtype == "tree".to_string() {
+                                    let msg_index = result.insert_data(msg.clone());
+                                    result.file.push((item.clone(), msg_index));
+                                    has.push(parent_dir.to_string());
+                                }
+                            }
+                        }
+                    }
                     if let Some(path) = path.to_str().map(|x| x.to_string()) {
                         if has.contains(&path) {
                             continue;
                         }
                         if let Some(item) = state_tree.iter().find(|x| x.to_path() == path) {
-                            let msg_index = result.insert_data(msg.clone());
-                            result.file.push((item.clone(), msg_index));
-                            has.push(item.to_path());
+                            if item.rtype == "blob".to_string() {
+                                let msg_index = result.insert_data(msg.clone());
+                                result.file.push((item.clone(), msg_index));
+                                has.push(item.to_path());
+                            }
                         }
                     }
                 }
+            }
+            if has.len() == state_tree.len() {
+                break;
             }
             commit = parent;
         }
