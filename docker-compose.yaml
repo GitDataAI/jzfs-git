@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  jzfs_deps_redis:
+    image: redis:latest
+    container_name: jzfs_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - jzfs
+  jzfs-git:
+    build: .
+    image: gitdatateam/jzfs-git
+    container_name: jzfs-git
+    ports:
+      - "22:30322"
+      - "80:80"
+    volumes:
+      - ./data:/explore/data
+      - ./logs:/explore/logs
+    entrypoint:
+      - REDIS_URL=redis://jzfs_redis:6379
+      - PORT=80
+      - ROOT_DATA=/explore/data
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - jzfs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jzfs-git.rule=Host(`git.atom.gitdata.ai`)"
+      - "traefik.http.routers.jzfs-git.entrypoints=websecure"
+      - "traefik.http.routers.jzfs-git.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+    depends_on:
+      - jzfs_deps_redis
+
+networks:
+  jzfs:
+    driver: bridge
+
+volumes:
+  redis_data:
