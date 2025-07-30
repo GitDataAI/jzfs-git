@@ -13,7 +13,7 @@ services:
       - jzfs
   jzfs-git:
     build: .
-    image: gitdatateam/jzfs-git
+    image: gitdatateam/jzfs-git:latest
     container_name: jzfs-git
     ports:
       - "22:30322"

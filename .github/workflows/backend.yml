@@ -53,5 +53,5 @@ jobs:
         run: |
           docker build -t gitdatateam/jzfs-git:${{ steps.version.outputs.version }} --no-cache .
           docker push gitdatateam/jzfs-git:${{ steps.version.outputs.version }}
-          docker tag gitdatateam/jzfs-git:${{ steps.version.outputs.version }} gitdatateam/gitdataos:latest
+          docker tag gitdatateam/jzfs-git:${{ steps.version.outputs.version }} gitdatateam/jzfs-git:latest
           docker push gitdatateam/jzfs-git:latest
