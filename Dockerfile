@@ -18,4 +18,4 @@ COPY script/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 COPY script/start.sh /explore/start.sh
 RUN chmod +x /explore/start.sh
-ENTRYPOINT ["sh", "-c", "/explore.sh"]
+ENTRYPOINT ["sh", "-c", "/explore/start.sh"]
