@@ -47,7 +47,7 @@ impl App {
             return Err(AppError::Custom("Username already exists".to_string()));
         }
         let models =
-            UsersModel::create(&self.db, &param.username, &param.email, &param.password).await?;
+            UsersModel::create(&self.db, &param.username, &param.password, &param.email).await?;
         Ok(AuthSession::from(models))
     }
 }

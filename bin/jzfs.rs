@@ -17,7 +17,8 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let session_storage = RedisSessionStorage::new(redis_client.single(), RandKey::RandomSha256(128))
         .set_prefix("session:");
     let session_builder = SessionBuilder::new()
-        .rand_key(RandKey::RandomSha256(128));
+        .rand_key(RandKey::RandomSha256(128))
+        .secure(false);
     let port = std::env::var("PORT").unwrap_or("8080".to_string());
     let socket = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port.parse::<u16>().unwrap());
     let shell = shell::ssh::SSHHandle::new(app.clone());
