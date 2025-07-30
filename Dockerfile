@@ -10,6 +10,7 @@ RUN apk add --no-cache git && npm install -g pnpm && pnpm install
 COPY views/ .
 RUN pnpm build
 FROM ubuntu:22.04
+RUN apt-get update && apt-get install -y git
 COPY --from=backend-builder /app/target/release/jzfs /explore/
 RUN chmod +x /explore/jzfs
 COPY --from=frontend-builder /app/views/dist /explore/html
