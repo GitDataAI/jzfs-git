@@ -1,5 +1,6 @@
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-use rsession::{RandKey, SessionBuilder};
+use time::Duration;
+use rsession::{RandKey, RefreshStrategy, SessionBuilder};
 use rsession::redis::RedisSessionStorage;
 use api::ApiService;
 use infra::config::pgsql::pgsql_client;
@@ -18,7 +19,12 @@ pub async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .set_prefix("session:");
     let session_builder = SessionBuilder::new()
         .rand_key(RandKey::RandomSha256(128))
-        .secure(false);
+        .secure(false)
+        .refresh_strategy(
+            RefreshStrategy::PersistentStorage(
+                Duration::days(7)
+            )
+        );
     let port = std::env::var("PORT").unwrap_or("8080".to_string());
     let socket = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port.parse::<u16>().unwrap());
     let shell = shell::ssh::SSHHandle::new(app.clone());
