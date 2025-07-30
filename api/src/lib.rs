@@ -70,11 +70,11 @@ impl ApiService {
 
         )
             .configure(shell::http::git_route)
-            .route("{tail:.*}",get().to(dist::dist))
+            // .route("{tail:.*}",get().to(dist::dist))
         ;
     }
 }
 mod auth;
 mod repo;
 mod error;
-mod dist;
+// mod dist;

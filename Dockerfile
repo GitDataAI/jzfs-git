@@ -10,10 +10,12 @@ RUN apk add --no-cache git && npm install -g pnpm && pnpm install
 COPY views/ .
 RUN pnpm build
 FROM ubuntu:22.04
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git nginx
 COPY --from=backend-builder /app/target/release/jzfs /explore/
 RUN chmod +x /explore/jzfs
 COPY --from=frontend-builder /app/views/dist /explore/html
+COPY script/nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
-ENV PORT=80
-CMD ["sh", "-c", "/explore/jzfs"]
+COPY script/start.sh /explore/start.sh
+RUN chmod +x /explore/start.sh
+ENTRYPOINT ["sh", "-c", "/explore.sh"]
