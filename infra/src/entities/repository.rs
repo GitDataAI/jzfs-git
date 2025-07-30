@@ -19,7 +19,10 @@ pub struct RepositoryModel {
 
 impl RepositoryModel {
     pub fn to_path(&self) -> PathBuf {
-        PathBuf::from(format!("{}/{}", self.owner, self.name))
+        #[cfg(target_os = "linux")]
+        return PathBuf::from(format!("{}/{}", self.owner, self.name));
+        #[cfg(target_os = "windows")]
+        return PathBuf::from(format!("{}\\{}", self.owner, self.name));
     }
 
     pub async fn create(

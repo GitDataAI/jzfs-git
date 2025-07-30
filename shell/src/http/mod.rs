@@ -6,6 +6,7 @@ use actix_web::web::{get, post, scope, Data};
 use infra::entities::repository::RepositoryModel;
 use infra::App;
 use std::path::PathBuf;
+use git::AppGit;
 
 pub mod git_refs;
 pub mod git_receive_pack;
@@ -21,7 +22,7 @@ pub async fn verify_repo_access(
         .await
         .map_err(|_| anyhow::anyhow!("Repo not found"))?
         .ok_or(anyhow::anyhow!("Repo not found"))?;
-    Ok(repo_path.to_path())
+    Ok(AppGit::new(repo_path.to_path()).path_buf)
 }
 
 

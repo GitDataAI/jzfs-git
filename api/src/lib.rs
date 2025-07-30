@@ -8,7 +8,6 @@ use rsession::framework::actix::ActixSessionMiddleware;
 use rsession::redis::RedisSessionStorage;
 use rsession::SessionBuilder;
 use std::net::SocketAddr;
-use actix_files::Files;
 use tracing::{error, info};
 use crate::repo::branch::repo_branch;
 use crate::repo::dash::repo_dash;
@@ -68,11 +67,9 @@ impl ApiService {
                         .route("/branches", get().to(repo_branch))
                         )
                 )
-                .service(
-                    scope("/git")
-                        .configure(shell::http::git_route)
-                )
+
         )
+            .configure(shell::http::git_route)
             .route("{tail:.*}",get().to(dist::dist))
         ;
     }

@@ -27,7 +27,7 @@ pub async fn git_refs(
         .collect::<Vec<_>>();
 
     let mut cmd = Command::new("git");
-
+    info!("request url: {}", url.join("/"));
     let server = if url.iter().any(|x| x.contains("git-upload-pack")) {
         response.insert_header(("Content-Type", "application/x-git-upload-pack-advertisement"));
         cmd.arg("upload-pack");
@@ -41,7 +41,6 @@ pub async fn git_refs(
         return HttpResponseBuilder::new(StatusCode::BAD_REQUEST)
             .body("Protoc Not Support");
     };
-
     let repo = repo.replace(".git", "");
     info!("repository ops: {}", format!("{}/{}", owner, repo));
     let Ok(Some(repo)) = RepositoryModel::repository_find_by_owner_name_and_repo_name(&status.db,owner, repo).await else {
@@ -53,6 +52,7 @@ pub async fn git_refs(
         return HttpResponseBuilder::new(StatusCode::NOT_FOUND)
             .body("repository not found");
     }
+    dbg!(&path);
 
     cmd.arg("--stateless-rpc");
     cmd.arg("--advertise-refs");
