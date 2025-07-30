@@ -1,0 +1,27 @@
+[package]
+name = "shell"
+edition = "2024"
+
+
+[dependencies]
+serde = { workspace = true, features = ["derive"] }
+chrono = { version = "0.4.41", features = ["clock"] }
+uuid = { workspace = true, features = ["v7","v4","serde"] }
+sha256 = { version = "1.6.0" }
+serde_json = { workspace = true }
+tokio = { workspace = true, features = ["full"]}
+actix-web = { version = "4.11.0", features = ["cookies"] }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow = "1.0.98"
+futures-util = { version = "0.3.31", features = [] }
+dotenv = { version = "0.15.0" }
+infra = { workspace = true }
+async-trait = { version = "0.1.88" }
+async-stream = "0.3.6"
+bytes = "1.10.1"
+flate2 = "1.1.2"
+git = { workspace = true }
+russh = { version = "0.52.1", features = ["flate2","async-trait"] }
+futures = "0.3.31"
+hex = { version = "0.4.3", features = ["serde"] }

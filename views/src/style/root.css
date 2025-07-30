@@ -1,0 +1,15 @@
+@import "./auth.css";
+@import "tailwindcss";
+
+.root {
+    @apply flex flex-col  min-h-screen;
+    @apply bg-gray-100 text-gray-800;
+    @apply w-full px-4;
+    @apply lg:max-w-7xl lg:mx-auto
+}
+
+.root-header {
+    @apply flex flex-col;
+    @apply w-full;
+    @apply lg:flex-row lg:justify-between lg:items-center
+}

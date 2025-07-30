@@ -1,0 +1,69 @@
+[package]
+name = "rsession"
+version = "0.2.1"
+edition = "2024"
+authors = [
+    "<ZhenYi> <434836402@qq.com>"
+]
+description = "A simple session manager for Rust"
+repository = "https://github.com/GitDataAi/rsession"
+license = "MIT"
+keywords = [
+    "session",
+    "manager",
+    "cookie",
+    "web",
+]
+readme = "README.md"
+documentation = "https://docs.rs/rsession"
+categories = []
+publish = true
+[features]
+actix-web = ["dep:actix-web"]
+tower = ["dep:tower","dep:axum"]
+salvo = ["dep:salvo"]
+redis = ["dep:deadpool-redis", "deadpool-redis/rt_tokio_1","deadpool-redis/acl"]
+redis-cluster = ["redis", "deadpool-redis/cluster","deadpool-redis/cluster-async"]
+redis-sentinel = ["redis", "deadpool-redis/sentinel"]
+
+[dependencies]
+time = { version = "0.3", features = ["local-offset"] }
+cookie = { version = "0.18.1", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = [] }
+deadpool-redis = { version = "0.22.0", features = ["rt_tokio_1","rt_async-std_1","acl", "cluster","sentinel"], optional = true }
+uuid = { version = "1", features = ["v7","v4","serde"] }
+sha256 = { version = "1", features = [] }
+rand = { version = "0.9", features = ["std_rng"] }
+tokio = { version = "1.0.0", features = ["full"] }
+tracing-subscriber = { version = "0.3.19", features = [] }
+actix-web = { version = "4", features = [],optional = true }
+tower = { version = "0.5.2", features = [],optional = true }
+http = { version = "1", features = [] }
+axum = { version = "0.8.4", features = ["macros"],optional = true }
+futures = "0.3.31"
+async-trait = "0.1.88"
+salvo = { version = "0.81.0", features = [], optional = true }
+
+[[example]]
+name = "actix-web-test"
+path = "test/actix.rs"
+required-features = [
+    "actix-web",
+    "redis"
+]
+
+[[example]]
+name = "axum-test"
+path = "test/axum.rs"
+required-features = [
+    "tower",
+    "redis"
+]
+[[example]]
+name = "salvo-test"
+path = "test/salvo.rs"
+required-features = [
+    "salvo",
+    "redis"
+]
