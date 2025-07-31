@@ -10,5 +10,5 @@ function start_nginx() {
   nginx -g "daemon off;"
 }
 
-start_jzfs_git();
-start_nginx();
+start_jzfs_git()
+start_nginx()
