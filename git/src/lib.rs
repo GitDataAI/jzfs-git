@@ -47,3 +47,4 @@ pub mod commit;
 pub mod remote;
 pub mod tag;
 pub mod tree;
+pub mod cat_file;

@@ -13,3 +13,11 @@
     @apply w-full;
     @apply lg:flex-row lg:justify-between lg:items-center
 }
+
+
+.readme {
+    margin-top: 1rem;
+    border: 1px #dfdfdf solid;
+    padding: 1rem 2rem;
+    border-top: 2px #dfdfdf solid;
+}

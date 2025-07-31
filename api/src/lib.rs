@@ -10,6 +10,7 @@ use rsession::SessionBuilder;
 use std::net::SocketAddr;
 use tracing::{error, info};
 use crate::repo::branch::repo_branch;
+use crate::repo::cat_file::repo_cat_file;
 use crate::repo::dash::repo_dash;
 use crate::repo::tree::repo_tree;
 use crate::repo::commits::repo_commits;
@@ -63,6 +64,7 @@ impl ApiService {
                     scope("/{owner}/{repo}")
                         .route("",get().to(repo_dash))
                         .route("/tree/{path:.*}",get().to(repo_tree))
+                        .route("/cat_file/{path:.*}",get().to(repo_cat_file))
                         .route("/commits",get().to(repo_commits))
                         .route("/branches", get().to(repo_branch))
                         )

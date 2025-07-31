@@ -3,7 +3,15 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import type {Repository} from "@/app/repository/layout.tsx";
-
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkMath from 'remark-math';
+import remarkBreaks from 'remark-breaks';
+import remarkEmoji from 'remark-emoji';
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
+import {MdFileDownload, MdOutlineContentCopy} from "react-icons/md";
+import rehypeRaw from "rehype-raw";
+import rehypeKatex from "rehype-katex";
 interface FileData {
     repo: Repository,
     tree: {
@@ -54,7 +62,6 @@ export const RepoFiles = () => {
     const [commits, setCommits] = useState<CommitData[]>([]);
     const fetchFiles = () => {
         if (!owner || !repo) return;
-
         setLoading(true);
         const currentPath = path || '';
         const url = `/api/repo/${owner}/${repo}/tree/${currentPath}`;
@@ -76,6 +83,19 @@ export const RepoFiles = () => {
                 setLoading(false);
             });
     };
+    const [Readme, setReadme] = useState<string>("")
+    useEffect(() => {
+        setReadme("")
+        Object.values(files)
+            .map(([info, _])=>{
+                if (info.name === "README.md") {
+                    axios.get(`/api/repo/${owner}/${repo}/cat_file/${info.path}${info.name}`)
+                        .then(res=>{
+                            setReadme(res.data);
+                        })
+                }
+            })
+    }, [files]);
 
     useEffect(() => {
         fetchFiles();
@@ -106,11 +126,11 @@ export const RepoFiles = () => {
             </div>
         );
     }
-
+    let index = 0;
     return (
         <div className="p-4">
             {files.length ? (
-                <div className="h-[calc(100vh-250px)] overflow-auto">
+                <div className="h-auto overflow-auto">
                     <div>
                         {
                             path != "" && path && (
@@ -166,6 +186,94 @@ export const RepoFiles = () => {
                     <div>No files found</div>
                 </div>
             )}
+            <div className="readme">
+                {
+                    Readme && Readme !== "" && (
+                        <Markdown
+                        remarkPlugins={[remarkGfm, remarkMath, remarkBreaks, remarkEmoji]}
+                        rehypePlugins={[rehypeKatex, rehypeRaw]}
+                        components={{
+                            code({children, className}) {
+                                const match: any = /language-(\w+)/.exec(className || "");
+                                let [isShowCode, setIsShowCode] = useState(true);
+                                return (
+                                    <>
+                                        <div className="code-header">
+                                            <div
+                                                style={{cursor: "pointer", marginRight: "10px", transformOrigin: "8px"}}
+                                                className={isShowCode ? "code-rotate-down" : "code-rotate-right"}
+                                                onClick={() => setIsShowCode(!isShowCode)}
+                                            >
+                                                <MdFileDownload/>
+                                            </div>
+                                            <div>{match && match[1]}</div>
+                                            <div
+                                                className="preview-code-copy"
+                                            >
+                                                {/*{isShowCopy && <span className="opacity-0-1-0 copy-success">Success</span>}*/}
+                                                <MdOutlineContentCopy/>
+                                            </div>
+                                        </div>
+                                        {isShowCode && (
+                                            <SyntaxHighlighter
+                                                showLineNumbers={true}
+                                                language={match && match[1]}
+                                            >
+                                                {String(children).replace(/\n$/, "")}
+                                            </SyntaxHighlighter>
+                                        )}
+                                    </>
+                                );
+                            },
+                            h1({children}) {
+                                return (
+                                    <h1 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h1>
+                                );
+                            },
+                            h2({children}) {
+                                return (
+                                    <h2 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h2>
+                                );
+                            },
+                            h3({children}) {
+                                return (
+                                    <h3 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h3>
+                                );
+                            },
+                            h4({children}) {
+                                return (
+                                    <h4 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h4>
+                                );
+                            },
+                            h5({children}) {
+                                return (
+                                    <h5 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h5>
+                                );
+                            },
+                            h6({children}) {
+                                return (
+                                    <h6 id={"heading-" + ++index} className="heading">
+                                        {children}
+                                    </h6>
+                                );
+                            },
+                        }}
+                    >
+                        {Readme}
+                    </Markdown>
+                    )
+                }
+            </div>
         </div>
     );
 };
