@@ -173,7 +173,7 @@ export const RepoFiles = () => {
                                 <div className="flex items-center">
                                     {commits[idx] && (
                                         <>
-                                            {new Date(commits[idx].timestamp * 1000).toString()}
+                                            {getTimeStr(commits[idx].timestamp * 1000)}
                                         </>
                                     )}
                                 </div>
@@ -277,3 +277,26 @@ export const RepoFiles = () => {
         </div>
     );
 };
+
+
+export function getTimeStr(timestamp:number) {
+    const now = new Date();
+    const date = new Date(timestamp);
+    // @ts-ignore
+    const diff = (now - date) / 1000;
+
+    if (diff < 60) {
+        return "just";
+    } else if (diff < 3600) {
+        return Math.floor(diff / 60) + " minutes ago";
+    } else if (diff < 86400) {
+        return Math.floor(diff / 3600) + " hours ago";
+    } else if (diff < 604800) {
+        return Math.floor(diff / 86400) + " days ago";
+    } else {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    }
+}

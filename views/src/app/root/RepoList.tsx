@@ -2,6 +2,7 @@ import {Input, Pagination} from "@mantine/core";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import {getTimeStr} from "@/app/repository/files.tsx";
 export interface RepoListTypes {
     name: string,
     description: string,
@@ -98,10 +99,10 @@ export const RootRepoList = () => {
                                     color: '#999'
                                 }}>
                     <span>
-                        Created: {new Date(repo.created_at).toString()}
+                        Created: {getTimeStr(new Date(repo.created_at).getTime())}
                     </span>
                     <span>
-                        Updated: {new Date(repo.updated_at).toString()}
+                        Updated: {getTimeStr(new Date(repo.updated_at).getTime())}
                     </span>
                                 </div>
                             </div>

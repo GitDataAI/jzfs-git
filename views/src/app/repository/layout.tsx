@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import {Outlet, useNavigate, useParams,} from "react-router-dom";
 import { HeaderShell } from "@/component/shell/Header.tsx";
 import axios from "axios";
-import { Tabs } from "@mantine/core";
+import {Tabs} from "@mantine/core";
 import { Box, Card, Text, Button, Group } from "@mantine/core";
-import { AlertCircle, Loader2 } from "lucide-react";
+import {AlertCircle, CopyIcon, Loader2} from "lucide-react";
+import {useClipboard} from "@mantine/hooks";
+import {notifications} from "@mantine/notifications";
 
 interface RepoApiResponse {
     code: number;
@@ -42,6 +44,7 @@ export const Repolayout = () => {
     const [repoData, setRepoData] = useState<RepoData | null>(null);
     const nav = useNavigate();
     const [type, setType] = useState('files');
+    const clip = useClipboard()
     useEffect(() => {
         const urls = window.location.href.split("/");
         setType("files")
@@ -121,11 +124,20 @@ export const Repolayout = () => {
     }
 
     const { repo: repository } = repoData;
+
+    function copyText(arg0: string) {
+        clip.copy(arg0)
+        notifications.show({
+            message: "Copy Success",
+            color: "green"
+        })
+    }
+
     return (
         <>
             <HeaderShell />
             <Box mt={64} p={4} style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
-                <Card mb={4}>
+                <Card mb={4} >
                     <Box p={4}>
                         <Group justify="space-between" mb={2}>
                             <Text size="2xl">{owner}/{repository.name}</Text>
@@ -133,7 +145,35 @@ export const Repolayout = () => {
                                 {new Date(repository.updated_at).toLocaleDateString()}
                             </Text>
                         </Group>
-                        <Text color="dimmed" mb={4}>{repository.description || 'No description provided'}</Text>
+                        <Box style={{
+                            justifyContent: "space-between",
+                            display: "flex",
+                            alignItems: "center",
+                        }}>
+                            <Text color="dimmed" mb={4}>{repository.description || 'No description provided'}</Text>
+                            <div style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "1rem",
+                            }}>
+                                <div style={{
+                                    border: "1px solid #ccc",
+                                    borderRadius: "4px",
+                                    padding: "0.5rem",
+                                    display: "flex",
+                                    backgroundColor: "#f5f5f5",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    marginBottom: "0.5rem",
+                                    gap: "0.5rem"
+                                }}>
+                                    {window.location.protocol + "//"}{window.location.host + "/git/" + owner + "/" + repository.name + ".git"}
+                                    <CopyIcon onClick={() => {
+                                        copyText(window.location.protocol + "//" + window.location.host + "/git/" + owner + "/" + repository.name + ".git");
+                                    }}/>
+                                </div>
+                            </div>
+                        </Box>
                     </Box>
                 </Card>
                 <Tabs defaultValue={type} value={type} onChange={(value) => {

@@ -1,6 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import useUserContext from "@/store/useUserContext.tsx";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Button} from "@mantine/core";
 
 export const HeaderShell = () => {
@@ -9,6 +9,10 @@ export const HeaderShell = () => {
     useEffect(() => {
         user.refresh();
     }, []);
+    const [Width, setWidth] = useState(window.innerWidth);
+    useEffect(() => {
+        setWidth(window.innerWidth)
+    }, [window.innerWidth]);
     return(
         <div style={{
             background: "white",
@@ -17,16 +21,20 @@ export const HeaderShell = () => {
             display: "flex",
             borderBottom: "0.1rem solid rgb(217, 217, 217)",
         }}>
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                padding: "0 1rem",
-            }}>
-                <img src="/jzflow-logo-rust.png" alt="logo" style={{
-                    height: "32px",
-                }}/>
-            </div>
+            {
+                Width > 768 && (
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "0 1rem",
+                    }}>
+                        <img src="/jzflow-logo-rust.png" alt="logo" style={{
+                            height: "32px",
+                        }}/>
+                    </div>
+                )
+            }
             <div style={{
                 display: "flex",
                 alignItems: "center",
