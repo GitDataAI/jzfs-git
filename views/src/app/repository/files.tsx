@@ -9,9 +9,10 @@ import remarkMath from 'remark-math';
 import remarkBreaks from 'remark-breaks';
 import remarkEmoji from 'remark-emoji';
 import {Prism as SyntaxHighlighter} from "react-syntax-highlighter";
-import {MdFileDownload, MdOutlineContentCopy} from "react-icons/md";
+// import {MdFileDownload, MdOutlineContentCopy} from "react-icons/md";
 import rehypeRaw from "rehype-raw";
 import rehypeKatex from "rehype-katex";
+import {CiFolderOn} from "react-icons/ci";
 interface FileData {
     repo: Repository,
     tree: {
@@ -157,7 +158,7 @@ export const RepoFiles = () => {
                             >
                                 <div className="flex items-center">
                                     {file.rtype === 'tree' ? (
-                                        <GitBranch size={18} className="mr-2 text-blue-500" />
+                                        <CiFolderOn size={18} className="mr-2 text-blue-500" />
                                     ) : (
                                         <FileText size={18} className="mr-2" />
                                     )}
@@ -195,25 +196,25 @@ export const RepoFiles = () => {
                         components={{
                             code({children, className}) {
                                 const match: any = /language-(\w+)/.exec(className || "");
-                                let [isShowCode, setIsShowCode] = useState(true);
+                                let [isShowCode, _setIsShowCode] = useState(true);
                                 return (
                                     <>
-                                        <div className="code-header">
-                                            <div
-                                                style={{cursor: "pointer", marginRight: "10px", transformOrigin: "8px"}}
-                                                className={isShowCode ? "code-rotate-down" : "code-rotate-right"}
-                                                onClick={() => setIsShowCode(!isShowCode)}
-                                            >
-                                                <MdFileDownload/>
-                                            </div>
-                                            <div>{match && match[1]}</div>
-                                            <div
-                                                className="preview-code-copy"
-                                            >
-                                                {/*{isShowCopy && <span className="opacity-0-1-0 copy-success">Success</span>}*/}
-                                                <MdOutlineContentCopy/>
-                                            </div>
-                                        </div>
+                                        {/*<div className="code-header">*/}
+                                        {/*    <div*/}
+                                        {/*        style={{cursor: "pointer", marginRight: "10px", transformOrigin: "8px"}}*/}
+                                        {/*        className={isShowCode ? "code-rotate-down" : "code-rotate-right"}*/}
+                                        {/*        onClick={() => setIsShowCode(!isShowCode)}*/}
+                                        {/*    >*/}
+                                        {/*        <MdFileDownload/>*/}
+                                        {/*    </div>*/}
+                                        {/*    <div>{match && match[1]}</div>*/}
+                                        {/*    <div*/}
+                                        {/*        className="preview-code-copy"*/}
+                                        {/*    >*/}
+                                        {/*        /!*{isShowCopy && <span className="opacity-0-1-0 copy-success">Success</span>}*!/*/}
+                                        {/*        <MdOutlineContentCopy/>*/}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
                                         {isShowCode && (
                                             <SyntaxHighlighter
                                                 showLineNumbers={true}
@@ -227,42 +228,54 @@ export const RepoFiles = () => {
                             },
                             h1({children}) {
                                 return (
-                                    <h1 id={"heading-" + ++index} className="heading">
+                                    <h1 id={"heading-" + ++index} style={{
+                                        fontSize: "32px"
+                                    }} className="heading">
                                         {children}
                                     </h1>
                                 );
                             },
                             h2({children}) {
                                 return (
-                                    <h2 id={"heading-" + ++index} className="heading">
+                                    <h2 id={"heading-" + ++index} style={{
+                                        fontSize: "24px"
+                                    }}  className="heading">
                                         {children}
                                     </h2>
                                 );
                             },
                             h3({children}) {
                                 return (
-                                    <h3 id={"heading-" + ++index} className="heading">
+                                    <h3 style={{
+                                        fontSize: "18.72px"
+                                    }}  id={"heading-" + ++index} className="heading">
                                         {children}
                                     </h3>
                                 );
                             },
                             h4({children}) {
                                 return (
-                                    <h4 id={"heading-" + ++index} className="heading">
+                                    <h4 style={{
+                                        fontSize: "16px"
+                                    }}  id={"heading-" + ++index} className="heading">
                                         {children}
                                     </h4>
                                 );
                             },
                             h5({children}) {
                                 return (
-                                    <h5 id={"heading-" + ++index} className="heading">
+                                    <h5 style={{
+                                        fontSize: "13.28px"
+                                    }}  id={"heading-" + ++index} className="heading">
                                         {children}
                                     </h5>
                                 );
                             },
                             h6({children}) {
                                 return (
-                                    <h6 id={"heading-" + ++index} className="heading">
+                                    <h6 style={{
+                                        fontSize: "12px"
+                                    }}  id={"heading-" + ++index} className="heading">
                                         {children}
                                     </h6>
                                 );
